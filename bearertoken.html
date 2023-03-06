@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>My Website</title>
+</head>
+<body>
+	<!-- The iframe tag with the source URL and the Authorization header -->
+	<iframe src="https://llmdemo-vgsrqnmiga-uc.a.run.app"
+	        width="100%"
+	        height="500px"
+	        frameborder="0"
+	        scrolling="auto"
+	        sandbox="allow-same-origin allow-scripts">
+	</iframe>
+
+	<script>
+		// The JavaScript code to set the Authorization header in the iframe request
+		var iframe = document.querySelector('iframe');
+		iframe.contentWindow.postMessage({ type: 'authorization', value: 'Bearer ' }, '*');
+	</script>
+</body>
+</html>
