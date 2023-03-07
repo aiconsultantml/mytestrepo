@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>API Search Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+  </head>
+  <body>
+    <div class="container mt-4">
+      <h1 class="text-center mb-4">API Search Example</h1>
+
+      <div class="row">
+        <div class="col-md-6">
+          <form id="search-form">
+            <div class="input-group mb-3">
+              <label for="requested-text" class="input-group-text">Search:</label>
+              <input type="text" id="requested-text" name="requested_text" class="form-control">
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </form>
+
+          <h2>Search History:</h2>
+          <ul id="search-history"></ul>
+        </div>
+
+        <div class="col-md-6">
+          <h2>Results:</h2>
+          <div id="results"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Define the API endpoint URL
+      const apiUrl = 'https://example.com/api/search?q=';
+
+      // Get references to the form and results elements
+      const form = document.getElementById('search-form');
+      const resultsDiv = document.getElementById('results');
+      const searchHistoryList = document.getElementById('search-history');
+
+      // Initialize an empty array to store the search history
+      let searchHistory = [];
+
+      // Define a function to handle form submissions
+      function handleSubmit(event) {
+        // Prevent the default form submission behavior
+        event.preventDefault();
+
+        // Get the requested text from the form input
+        const requestedText = document.getElementById('requested-text').value;
+
+        // Build the API request URL
+        const requestUrl = apiUrl + requestedText;
+
+        // Use the fetch API to make the API request
+        fetch(requestUrl)
+          .then(response => response.json())
+          .then(data => {
+            // Display the API response in the results div
+            resultsDiv.innerHTML = JSON.stringify(data);
+
+            // Add the requested text and response to the search history array
+            searchHistory.push({requestedText: requestedText, response: data});
+
+            // Clear the form input
+            document.getElementById('requested-text').value = '';
+
+            // Update the search history list
+            searchHistoryList.innerHTML = searchHistory.map(search => `<li>${search.requestedText}: ${JSON.stringify(search.response)}</li>`).join('');
+          })
+          .catch(error => {
+            // Display an error message in the results div
+            resultsDiv.innerHTML = `An error occurred: ${error}`;
+
+            // Clear the form input
+            document.getElementById('requested-text').value = '';
+          });
+      }
+
+      // Add an event listener to the form for form submissions
+      form.addEventListener('submit', handleSubmit);
+    </script>
+  </body>
+</html>
